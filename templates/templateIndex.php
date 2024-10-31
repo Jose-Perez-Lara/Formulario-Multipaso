@@ -10,9 +10,9 @@
     <form action="index.php" method="post">
 
         <?php echo $formBody;?>
-        <button type="submit" name="retroceder" value="retroceder">Atrás</button>
-        <button type="submit" name="avanzar" value="avanzar">Siguiente</button>
-        <button type="submit" name="finalizar" value="fin">Finalizar</button>
+        <button type="submit" name="accion" value="atras">Atrás</button>
+        <button type="submit" name="accion" value="siguiente">Siguiente</button>
+        <button type="submit" name="accion" value="finalizar">Finalizar</button>
     </form>
 </body>
 </html>

@@ -13,7 +13,7 @@
             case 2:
                 $formBody .= "<label>Musculos: </label>";
                 foreach ($_SESSION['form']['pasos'][2]['options'] as $opcion) {
-                    $formBody .= "<input type='checkbox' name='musculos[]'value='$musculo'> $musculo    ";
+                    $formBody .= "<input type='checkbox' name='musculos[]'value='$opcion'> $opcion <br>";
                 }
                 break;
             
