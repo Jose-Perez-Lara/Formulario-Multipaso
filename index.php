@@ -64,8 +64,7 @@ if (isset($_POST) && !empty($_POST)) {
             $pesos = $_POST['pesos'];
             $repeticiones = $_POST['repeticiones'];
             $pesosYRepeticiones = joinPesoYRepes($pesos, $repeticiones);
-            // array_push($_SESSION['form']['pasos'][$pasoActual]['values'])
-            //  = $_POST[];
+            $_SESSION['form']['pasos'][$pasoActual]['values'] = $pesosYRepeticiones;
             break;
 
         default:
