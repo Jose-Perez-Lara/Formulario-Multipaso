@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <form action="index.php" method="post">
+    <form action="index.php" method="post" enctype="multipart/form-data">
 
         <?php echo $formBody; ?>
 

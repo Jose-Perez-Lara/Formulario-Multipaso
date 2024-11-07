@@ -32,16 +32,16 @@ function getFormMarkup($paso)
             foreach ($_SESSION['form']['pasos'][2]['values'] as $value) {
                 if (!empty($_SESSION['form']['pasos'][3]['values'][$value])) {
                     $formBody .= "<label>Peso(" . $value . "): </label>";
-                    $formBody .= "<input type='text' value='" . $_SESSION['form']['pasos'][3]['values'][$value]['peso'] . "' name='pesos[" . $value . "]'> <br>";
+                    $formBody .= "<input type='text' required value='" . $_SESSION['form']['pasos'][3]['values'][$value]['peso'] . "' name='pesos[" . $value . "]'> <br>";
 
                     $formBody .= "<label>Repeticiones(" . $value . "): </label>";
-                    $formBody .= "<input type='text' value='" . $_SESSION['form']['pasos'][3]['values'][$value]['repeticiones'] . "' name='repeticiones[" . $value . "]'> <br>";
+                    $formBody .= "<input type='text' required value='" . $_SESSION['form']['pasos'][3]['values'][$value]['repeticiones'] . "' name='repeticiones[" . $value . "]'> <br>";
                 } else {
                     $formBody .= "<label>Peso(" . $value . "): </label>";
-                    $formBody .= "<input type='text' name='pesos[" . $value . "]'> <br>";
+                    $formBody .= "<input type='text' required name='pesos[" . $value . "]'> <br>";
 
                     $formBody .= "<label>Repeticiones(" . $value . "): </label>";
-                    $formBody .= "<input type='text' name='repeticiones[" . $value . "]'> <br>";
+                    $formBody .= "<input type='text' required name='repeticiones[" . $value . "]'> <br>";
                 }
             }
 
@@ -75,8 +75,10 @@ function getFormMarkup($paso)
 
                     $planes = preg_split("[\\n]", $value);
 
+                    $peso += $peso * ($index / 10);
+                    $repeticiones += 1;
                     foreach ($planes as $plan) {
-                        $formBody .= "<ul>" . $plan . " con " . $peso . " kg a " . $repeticiones . " repeticiones</ul>";
+                        $formBody .= "<ul>" . $plan . " con " . $peso . " kg a " .  $repeticiones  . " repeticiones</ul>";
                     }
 
 
@@ -91,15 +93,27 @@ function getFormMarkup($paso)
             break;
         case 5:
             foreach ($_SESSION['form']['pasos'][5]['options'] as $type => $option) {
-                // var_dump($option);
-                $formBody .= '
-                            <label for="' . $option . '">Introduce tu ' . $option . '</label>
-                            <input type="' . $type . '" name="' . $option . '" id="' . $option . '"></input>';
+                if ($type == "file") {
+                    $formBody .= '
+                    <label for="' . $option . '">Introduce tu ' . $option . '</label>
+                    <input type="' . $type . '" required accept =".jpg, .jpeg, .png" name="' . $option . '" id="' . $option . '"></input>';
+                } else {
+                    $formBody .= '
+                    <label for="' . $option . '">Introduce tu ' . $option . '</label>
+                    <input type="' . $type . '" required name="' . $option . '" id="' . $option . '"></input>';
+                }
             }
 
             $formBody .= '<br>
                 <button type="submit" name="accion" value="atras">Atrás</button>
                 <button type="submit" name="accion" value="finalizar">Finalizar</button>';
+            break;
+
+        case "final":
+            $formBody .= '<table>';
+
+            $formBody .= '<button type="submit" name="accion" value="reiniciar">Reiniciar</button>
+                <button type="submit" name="accion" value="atras">Atrás</button>';
             break;
 
         default:
@@ -120,4 +134,24 @@ function joinPesoYRepes($pesos, $repes)
         $finalArray[$key] = $tempArray;
     }
     return $finalArray;
+}
+
+function getUserInfoStructure($nombre, $email, $foto)
+{
+    return array("nombre" => $nombre, "email" => $email, "foto" => $foto);
+}
+
+
+function saveImage()
+{
+    $done = false;
+    var_dump($_FILES['foto']);
+    $nombreImg = basename($_FILES['foto']['name']);
+    $ruta = "../uploads/";
+    $rutaDestino = $ruta . $nombreImg;
+    if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
+        $done = true;
+    }
+
+    return $done;
 }

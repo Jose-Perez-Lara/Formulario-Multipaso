@@ -49,7 +49,7 @@ if (!isset($_SESSION['form']) || empty($_SESSION['form'])) {
                     "email" => "email",
                     "file" => "foto"
                 ],
-                "values" => [],
+                "users" => [],
             ]
         ]
     ];
@@ -73,6 +73,18 @@ if (isset($_POST) && !empty($_POST)) {
         case 4:
             $_SESSION['form']['pasos'][$pasoActual]['values'] = $_POST['plan'];
             break;
+        case 5:
+            if (saveImage()) {
+                $nombre = $_POST['nombre'];
+                $email = $_POST['email'];
+                $foto = $_POST['foto'];
+                $userInfo = getUserInfoStructure($nombre, $email, $foto);
+                $_SESSION['form']['pasos'][$pasoActual]['users'] = $userInfo;
+            } else {
+                $_SESSION['form']['pasoActual'] = $_SESSION['form']['pasoActual'] - 1;
+            }
+
+            break;
         default:
             # code...
             break;
@@ -90,6 +102,9 @@ if (isset($_POST['accion']) && !empty($_POST['accion'])) {
 
         case 'siguiente':
             $_SESSION['form']['pasoActual'] = $_SESSION['form']['pasoActual'] + 1;
+            break;
+        case 'finalizar':
+            $_SESSION['form']['pasoActual'] = "final";
             break;
 
         default:
