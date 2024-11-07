@@ -28,12 +28,21 @@ function getFormMarkup($paso)
                 <button type="submit" name="accion" value="siguiente">Siguiente</button>';
             break;
         case 3:
-            foreach ($_SESSION['form']['pasos'][2]['values'] as $value) {
-                $formBody .= "<label>Peso(" . $value . "): </label>";
-                $formBody .= "<input type='text' name='pesos[" . $value . "]'> <br>";
 
-                $formBody .= "<label>Repeticiones(" . $value . "): </label>";
-                $formBody .= "<input type='text' name='repeticiones[" . $value . "]'> <br>";
+            foreach ($_SESSION['form']['pasos'][2]['values'] as $value) {
+                if (!empty($_SESSION['form']['pasos'][3]['values'][$value])) {
+                    $formBody .= "<label>Peso(" . $value . "): </label>";
+                    $formBody .= "<input type='text' value='" . $_SESSION['form']['pasos'][3]['values'][$value]['peso'] . "' name='pesos[" . $value . "]'> <br>";
+
+                    $formBody .= "<label>Repeticiones(" . $value . "): </label>";
+                    $formBody .= "<input type='text' value='" . $_SESSION['form']['pasos'][3]['values'][$value]['repeticiones'] . "' name='repeticiones[" . $value . "]'> <br>";
+                } else {
+                    $formBody .= "<label>Peso(" . $value . "): </label>";
+                    $formBody .= "<input type='text' name='pesos[" . $value . "]'> <br>";
+
+                    $formBody .= "<label>Repeticiones(" . $value . "): </label>";
+                    $formBody .= "<input type='text' name='repeticiones[" . $value . "]'> <br>";
+                }
             }
 
 
@@ -51,11 +60,21 @@ function getFormMarkup($paso)
 
 
                 foreach ($_SESSION['form']['pasos'][4]['options'][$musculo] as $index => $value) {
+                    $checked = "";
+
+                    if (!empty($_SESSION['form']['pasos'][4]['values'][$musculo])) {
+                        $selecteds = preg_split("[_]", $_SESSION['form']['pasos'][4]['values'][$musculo]);
+                        if (in_array($index, $selecteds)) {
+                            $checked = "checked";
+                        }
+                    }
+
                     $formBody .= "<li>
-                    <label for='plan_." . $index . "'>Plan para " . $musculo . " " . ($index + 1) . "</label>
-                    <input type='radio' name='plan_" . $musculo . "' id='plan_" . $index . "' value='plan_" . $musculo . "_" . $index . "'>";
+                        <label for='plan_." . $index . "'>Plan para " . $musculo . " " . ($index + 1) . "</label>
+                        <input type='radio'" . $checked . " name='plan[" . $musculo . "]'value='plan_" . $musculo . "_" . $index . "'>";
 
                     $planes = preg_split("[\\n]", $value);
+
                     foreach ($planes as $plan) {
                         $formBody .= "<ul>" . $plan . " con " . $peso . " kg a " . $repeticiones . " repeticiones</ul>";
                     }
@@ -71,10 +90,14 @@ function getFormMarkup($paso)
                 <button type="submit" name="accion" value="siguiente">Siguiente</button>';
             break;
         case 5:
-            $formBody .= '<label for="nombre">Introduce tu nombre</label>
-            <input type="text" name="nombre" id="nombre"></input>';
+            foreach ($_SESSION['form']['pasos'][5]['options'] as $type => $option) {
+                // var_dump($option);
+                $formBody .= '
+                            <label for="' . $option . '">Introduce tu ' . $option . '</label>
+                            <input type="' . $type . '" name="' . $option . '" id="' . $option . '"></input>';
+            }
 
-            $formBody .= '
+            $formBody .= '<br>
                 <button type="submit" name="accion" value="atras">Atrás</button>
                 <button type="submit" name="accion" value="finalizar">Finalizar</button>';
             break;

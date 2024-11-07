@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 session_start();
 
@@ -44,7 +44,11 @@ if (!isset($_SESSION['form']) || empty($_SESSION['form'])) {
                 "values" => []
             ],
             5 => [
-                "options" => ["nombre", "email", "foto"],
+                "options" => [
+                    "text" => "nombre",
+                    "email" => "email",
+                    "file" => "foto"
+                ],
                 "values" => [],
             ]
         ]
@@ -66,7 +70,9 @@ if (isset($_POST) && !empty($_POST)) {
             $pesosYRepeticiones = joinPesoYRepes($pesos, $repeticiones);
             $_SESSION['form']['pasos'][$pasoActual]['values'] = $pesosYRepeticiones;
             break;
-
+        case 4:
+            $_SESSION['form']['pasos'][$pasoActual]['values'] = $_POST['plan'];
+            break;
         default:
             # code...
             break;
