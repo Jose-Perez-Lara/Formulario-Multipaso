@@ -77,7 +77,7 @@ if (isset($_POST) && !empty($_POST)) {
             if (saveImage()) {
                 $nombre = $_POST['nombre'];
                 $email = $_POST['email'];
-                $foto = $_POST['foto'];
+                $foto = basename($_FILES['foto']['name']);
                 $userInfo = getUserInfoStructure($nombre, $email, $foto);
                 $_SESSION['form']['pasos'][$pasoActual]['users'] = $userInfo;
             } else {
@@ -105,6 +105,12 @@ if (isset($_POST['accion']) && !empty($_POST['accion'])) {
             break;
         case 'finalizar':
             $_SESSION['form']['pasoActual'] = "final";
+            break;
+
+        case 'reiniciar':
+            session_destroy();
+            $_SESSION['form']['pasoActual'] = 1;
+
             break;
 
         default:

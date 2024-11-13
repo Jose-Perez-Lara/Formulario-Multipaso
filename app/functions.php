@@ -110,7 +110,36 @@ function getFormMarkup($paso)
             break;
 
         case "final":
-            $formBody .= '<table>';
+
+            $formBody .= '<table>
+                <thead>
+                <tr>
+                <td>Nombre</td> <td>Foto</td> <td>Email</td>  <td>Plan</td> 
+                <tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>' . $_SESSION['form']['pasos'][5]['users']['nombre'] . '</td> 
+                    <td> <img src="./uploads/' . $_SESSION['form']['pasos'][5]['users']['foto'] . '"></td>
+                    <td>' . $_SESSION['form']['pasos'][5]['users']['email'] . '</td>
+                    <td>';
+            var_dump($_SESSION['form']['pasos'][4]['values']);
+            foreach ($_SESSION['form']['pasos'][4]['values'] as $key => $value) {
+                $formBody .= '<ul>';
+                $plan = preg_split("/_/", $value);
+                $peso = $_SESSION['form']['pasos'][3]['values'][$plan[1]]['peso'];
+                $repeticiones = $_SESSION['form']['pasos'][3]['values'][$plan[1]]['repeticiones'];
+
+                $formBody .= '<li>' . $_SESSION['form']['pasos'][4]['options'][$plan[1]][$plan[2]] . $peso . 'kg' . $repeticiones . ' repeticiones' . '</li>';
+
+                $formBody .= '</ul>';
+            }
+
+            $formBody .= '</td>
+                </tr>
+                </tbody>';
+
+            $formBody .= '</table>';
 
             $formBody .= '<button type="submit" name="accion" value="reiniciar">Reiniciar</button>
                 <button type="submit" name="accion" value="atras">Atrás</button>';
@@ -147,7 +176,7 @@ function saveImage()
     $done = false;
     var_dump($_FILES['foto']);
     $nombreImg = basename($_FILES['foto']['name']);
-    $ruta = "../uploads/";
+    $ruta = "./uploads/";
     $rutaDestino = $ruta . $nombreImg;
     if (move_uploaded_file($_FILES['foto']['tmp_name'], $rutaDestino)) {
         $done = true;
